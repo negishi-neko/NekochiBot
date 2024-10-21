@@ -15,16 +15,28 @@ export const data = new SlashCommandBuilder()
     "ボイスチャンネルに人が入ったときに、通知するよう設定できるよ～"
   )
   .addSubcommand((subcommand) =>
-    subcommand.setName("status").setDescription("コマンドを実行したチャンネルのボイスチャンネル入室通知の設定を確認するよ～")
+    subcommand
+      .setName("status")
+      .setDescription(
+        "コマンドを実行したチャンネルのボイスチャンネル入室通知の設定を確認するよ～"
+      )
   )
   .addSubcommand((subcommand) =>
-    subcommand.setName("list").setDescription("サーバー内のすべてのボイスチャンネル入室通知の設定を確認するよ～")
+    subcommand
+      .setName("list")
+      .setDescription(
+        "サーバー内のすべてのボイスチャンネル入室通知の設定を確認するよ～"
+      )
   )
   .addSubcommand((subcommand) =>
-    subcommand.setName("configure").setDescription("ボイスチャンネル入室通知を設定するよ～")
+    subcommand
+      .setName("configure")
+      .setDescription("ボイスチャンネル入室通知を設定するよ～")
   )
   .addSubcommand((subcommand) =>
-    subcommand.setName("delete").setDescription("ボイスチャンネル入室通知の設定を削除するよ～")
+    subcommand
+      .setName("delete")
+      .setDescription("ボイスチャンネル入室通知の設定を削除するよ～")
   );
 
 export async function execute(interaction) {
@@ -43,7 +55,7 @@ export async function execute(interaction) {
       return;
     }
 
-    const channelsArr = notifications.map(n => `・<#${n.voiceChannelId}>`);
+    const channelsArr = notifications.map((n) => `・<#${n.voiceChannelId}>`);
 
     const channels = channelsArr.join("\n");
 
@@ -62,28 +74,33 @@ export async function execute(interaction) {
         guildId: interaction.guildId,
       },
       attributes: [
-        [Sequelize.fn('DISTINCT', Sequelize.col('textChannelId')) ,'textChannelId'],
-      ]
+        [
+          Sequelize.fn("DISTINCT", Sequelize.col("textChannelId")),
+          "textChannelId",
+        ],
+      ],
     });
-    
+
     if (notificationTextChannels.length == 0) {
       await interaction.reply("設定は見つかりませんでした。");
       return;
     }
 
     const embeds = await Promise.all(
-      notificationTextChannels.map(async n => {
+      notificationTextChannels.map(async (n) => {
         const notifications = await Notification.findAll({
           where: {
             guildId: interaction.guildId,
             textChannelId: n.textChannelId,
           },
         });
-        const channelsArr = notifications.map(n => `・<#${n.voiceChannelId}>`);
+        const channelsArr = notifications.map(
+          (n) => `・<#${n.voiceChannelId}>`
+        );
         const channels = channelsArr.join("\n");
 
         return new EmbedBuilder()
-	        .setColor(0x0099ff)
+          .setColor(0x0099ff)
           .setTitle(`<#${n.textChannelId}> に通知を送信するボイスチャンネル`)
           .setDescription(channels);
       })
@@ -113,7 +130,9 @@ export async function execute(interaction) {
         );
       }
 
-      const voiceChannelrow = new ActionRowBuilder().addComponents(voiceChannelSelect);
+      const voiceChannelrow = new ActionRowBuilder().addComponents(
+        voiceChannelSelect
+      );
 
       const response = await interaction.reply({
         content:
@@ -121,8 +140,10 @@ export async function execute(interaction) {
         components: [voiceChannelrow],
       });
 
-      const collectorFilter = (i) => i.customId === "selectVoiceChannel" && i.user.id === interaction.user.id;
-      
+      const collectorFilter = (i) =>
+        i.customId === "selectVoiceChannel" &&
+        i.user.id === interaction.user.id;
+
       const collector = response.createMessageComponentCollector({
         collectorFilter,
         time: 30000,
@@ -148,8 +169,10 @@ export async function execute(interaction) {
         const channels = channelsArr.join("\n");
 
         const embed = new EmbedBuilder()
-	        .setColor(0x5cb85c)
-          .setTitle(`<#${interaction.channelId}> に通知を送信するボイスチャンネル`)
+          .setColor(0x5cb85c)
+          .setTitle(
+            `<#${interaction.channelId}> に通知を送信するボイスチャンネル`
+          )
           .setDescription(channels);
 
         await collectedInteraction.update({

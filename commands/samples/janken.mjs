@@ -58,7 +58,6 @@ export async function execute(interaction) {
     }
 
     await confirmation.followUp(result[solve]);
-    
   } catch (e) {
     await interaction.editReply({
       content: "時間切れ～(もしくはエラー)",
@@ -88,7 +87,10 @@ async function janken(confirmation) {
 
   const confirmedRow = new ActionRowBuilder().addComponents(playersHandButton);
 
-  const text =　(confirmation.message.content == "じゃんけん...")? "じゃんけん...\nぽん！": "あいこで...\nしょ！";
+  const text =
+    confirmation.message.content == "じゃんけん..."
+      ? "じゃんけん...\nぽん！"
+      : "あいこで...\nしょ！";
 
   await confirmation.update({
     content: `${text}${handsEmoji[botHand]}`,

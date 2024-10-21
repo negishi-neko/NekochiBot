@@ -13,6 +13,7 @@ import CommandsRegister from "./regist-commands.mjs";
 import Notification from "./models/notification.mjs";
 import YoutubeFeeds from "./models/youtubeFeeds.mjs";
 import YoutubeNotifications from "./models/youtubeNotifications.mjs";
+import dotenv from "dotenv";
 
 import Sequelize from "sequelize";
 import Parser from "rss-parser";
@@ -111,6 +112,9 @@ YoutubeFeeds.sync({ alter: true });
 YoutubeNotifications.sync({ alter: true });
 
 CommandsRegister();
+
+// 環境変数の登録
+dotenv.config();
 client.login(process.env.TOKEN);
 
 async function trigger() {

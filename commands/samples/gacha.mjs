@@ -5,7 +5,12 @@ export const data = new SlashCommandBuilder()
   .setDescription("ガチャを引くよ～");
 
 export async function execute(interaction) {
-  const arr = ["SSR 金のじゃがいも", "SR 銀のじゃがいも", "R 銅のじゃがいも", "N ただのじゃがいも"];
+  const arr = [
+    "SSR 金のじゃがいも",
+    "SR 銀のじゃがいも",
+    "R 銅のじゃがいも",
+    "N ただのじゃがいも",
+  ];
   const weight = [2, 4, 8, 16];
   let result = "";
 
@@ -14,7 +19,7 @@ export async function execute(interaction) {
     totalWeight += weight[i];
   }
   let random = Math.floor(Math.random() * totalWeight);
-  
+
   for (let i = 0; i < weight.length; i++) {
     if (random < weight[i]) {
       result = arr[i];
