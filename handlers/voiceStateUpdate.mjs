@@ -33,7 +33,9 @@ export default async (oldState, newState) => {
 
       const title = `<#${
         oldState.channel.id
-      }> での勉強を終了しました - 勉強時間: ${studyDuration.toFixed(2)} 分<br>${comment()}`;
+      }> での勉強を終了しました - 勉強時間: ${studyDuration.toFixed(
+        2
+      )} 分<br>${comment()}`;
       const embedBuilderColor = 0xff6347;
       await sendNotification(
         oldState.member,
@@ -73,8 +75,8 @@ async function sendNotification(member, voiceChannelId, guildId, color, title) {
 }
 
 // コメントを返す関数
-comment = (studyDuration) {
-  let comment = '';
+function comment(studyDuration) {
+  let comment = "";
   switch (studyDuration > 0) {
     case studyDuration <= 10:
       comment = "今日も積み上げナイス！";
@@ -98,4 +100,4 @@ comment = (studyDuration) {
       comment = "お疲れ様！";
   }
   return comment;
-};
+}
