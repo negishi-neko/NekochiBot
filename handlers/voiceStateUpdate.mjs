@@ -11,7 +11,7 @@ export default async (oldState, newState) => {
     const startTime = new Date(); // 現在時刻を取得
     studySessions[newState.member.id] = startTime; // ユーザーIDをキーに開始時刻を保存
 
-    const title = `<#${newState.channel.id}> で通話を開始しました！`;
+    const title = `<#${newState.channel.id}> で勉強を開始しました！`;
     const embedBuilderColor = 0x5cb85c;
     await sendNotification(
       newState.member,
@@ -33,7 +33,7 @@ export default async (oldState, newState) => {
 
       const title = `<#${
         oldState.channel.id
-      }> から退出しました - 勉強時間: ${studyDuration.toFixed(2)} 分<br>${comment()}`;
+      }> での勉強を終了しました - 勉強時間: ${studyDuration.toFixed(2)} 分<br>${comment()}`;
       const embedBuilderColor = 0xff6347;
       await sendNotification(
         oldState.member,
