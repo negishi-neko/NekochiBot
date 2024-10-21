@@ -35,7 +35,7 @@ export default async (oldState, newState) => {
         oldState.channel.id
       }> での勉強を終了しました - 勉強時間: ${studyDuration.toFixed(
         2
-      )} 分<br>${comment()}`;
+      )} 分\n${comment()}`;
       const embedBuilderColor = 0xff6347;
       await sendNotification(
         oldState.member,
