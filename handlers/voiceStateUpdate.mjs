@@ -26,7 +26,7 @@ export default async (oldState, newState) => {
     const startTime = studySessions[oldState.member.id]; // 勉強開始時刻を取得
 
     if (startTime) {
-      const studyDuration = (endTime - startTime) / 1000 / 60; // 勉強時間を分単位で計算
+      const studyDuration = Math.floor((endTime - startTime) / 1000 / 60); // 勉強時間を分単位で計算
       delete studySessions[oldState.member.id]; // 勉強時間を記録したら削除
 
       // 勉強時間に応じたコメントを追加
@@ -77,24 +77,28 @@ async function sendNotification(member, voiceChannelId, guildId, color, title) {
 // コメントを返す関数
 function comment(studyDuration) {
   let comment = "";
-  switch (studyDuration > 0) {
-    case studyDuration <= 10:
-      comment = "今日も積み上げナイス！";
+  switch (true) {
+    case studyDuration >= 240:
+      comment = "すごすぎるって...";
       break;
-    case studyDuration <= 20:
-      comment = "よーやった！";
-      break;
-    case studyDuration <= 30:
-      comment = "頑張ってるから、おやつをあげよう";
-      break;
-    case studyDuration <= 60:
-      comment = "頑張ってるな！ゆっくり休んで！";
-      break;
-    case studyDuration <= 120:
+    case studyDuration >= 120:
       comment = "集中力の鬼！";
       break;
-    case studyDuration <= 240:
-      comment = "すごすぎるって！";
+    case studyDuration >= 60:
+      comment = "頑張ってるな！ゆっくり休んで！";
+      break;
+    case studyDuration >= 30:
+      comment = "頑張ってるから、ねこちからおやつをあげよう";
+      break;
+    case studyDuration >= 20:
+      comment = "小学校の昼休みの時間を丸々勉強したんか！すごい！";
+      break;
+    case studyDuration >= 10:
+      comment = "今日も積み上げナイス！成長してる！";
+      break;
+    case studyDuration >= 3:
+      comment =
+        "これを毎日積み重ねられるかどうかが大事やねん、ナイス！お疲れ！";
       break;
     default:
       comment = "お疲れ様！";
