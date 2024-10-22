@@ -33,9 +33,9 @@ export default async (oldState, newState) => {
 
       const title = `<#${
         oldState.channel.id
-      }> での勉強を終了しました - 勉強時間: ${studyDuration.toFixed(
-        2
-      )} 分\n${comment()}`;
+      }> での勉強を終了しました - 勉強時間: ${studyDuration} 分\n${comment(
+        studyDuration
+      )}`;
       const embedBuilderColor = 0xff6347;
       await sendNotification(
         oldState.member,
