@@ -7,11 +7,14 @@ const studySessions = {};
 
 export default async (oldState, newState) => {
   if (newState.channelId != null && oldState.channelId == null) {
+    // 既に同じユーザが別端末で入っている場合などは何もせず抜ける
+    if (studySessions[newState.member.id] != null) return;
+
     // 入室処理 - 勉強開始時刻を記録
     const startTime = new Date(); // 現在時刻を取得
     studySessions[newState.member.id] = startTime; // ユーザーIDをキーに開始時刻を保存
 
-    const title = `<#${newState.channel.id}> で勉強を開始しました！`;
+    const title = `${newState.member.displayName} が勉強を開始しました！`;
     const embedBuilderColor = 0x5cb85c;
     await sendNotification(
       newState.member,
@@ -31,9 +34,9 @@ export default async (oldState, newState) => {
 
       // 勉強時間に応じたコメントを追加
 
-      const title = `<#${
-        oldState.channel.id
-      }> での勉強を終了しました - 勉強時間: ${studyDuration} 分\n${comment(
+      const title = `${
+        newState.member.displayName
+      } が勉強を終了しました - 勉強時間: ${studyDuration} 分\n${comment(
         studyDuration
       )}`;
       const embedBuilderColor = 0xff6347;
