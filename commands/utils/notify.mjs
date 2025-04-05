@@ -130,14 +130,14 @@ export async function execute(interaction) {
         );
       }
 
-      const voiceChannelrow = new ActionRowBuilder().addComponents(
+      const voiceChannelRow = new ActionRowBuilder().addComponents(
         voiceChannelSelect
       );
 
       const response = await interaction.reply({
         content:
           "チェックしたいボイスチャンネルを選んでね（メニューを閉じると確定します）",
-        components: [voiceChannelrow],
+        components: [voiceChannelRow],
       });
 
       const collectorFilter = (i) =>
