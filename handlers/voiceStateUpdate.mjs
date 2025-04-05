@@ -1,12 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { Configuration, OpenAIApi } from "openai";
-
 import Notification from "../models/notification.mjs";
-
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // GitHub Secrets から取得
-});
-const openai = new OpenAIApi(configuration);
 
 // ユーザーごとの勉強開始時間を保持するオブジェクト
 const studySessions = {};
@@ -37,8 +30,6 @@ export default async (oldState, newState) => {
     if (startTime) {
       const studyDuration = Math.floor((endTime - startTime) / 1000 / 60); // 勉強時間を分単位で計算
       delete studySessions[oldState.member.id]; // 勉強時間を記録したら削除
-
-      // 勉強時間に応じたコメントを追加
 
       const title = `${
         newState.member.displayName
@@ -83,52 +74,34 @@ async function sendNotification(member, voiceChannelId, guildId, color, title) {
   );
 }
 
-// コメントを返す関数
-// function comment(studyDuration) {
-//   let comment = "";
-//   switch (true) {
-//     case studyDuration >= 240:
-//       comment = "すごすぎるって...";
-//       break;
-//     case studyDuration >= 120:
-//       comment = "集中力の鬼！";
-//       break;
-//     case studyDuration >= 60:
-//       comment = "頑張ってるな！ゆっくり休んで！";
-//       break;
-//     case studyDuration >= 30:
-//       comment = "頑張ってるから、ねこちからおやつをあげよう";
-//       break;
-//     case studyDuration >= 20:
-//       comment = "小学校の昼休みの時間を丸々勉強したんか！すごい！";
-//       break;
-//     case studyDuration >= 10:
-//       comment = "今日も積み上げナイス！成長してる！";
-//       break;
-//     case studyDuration >= 3:
-//       comment =
-//         "これを毎日積み重ねられるかどうかが大事やねん、ナイス！お疲れ！";
-//       break;
-//     default:
-//       comment = "お疲れ様！";
-//   }
-//   return comment;
-// }
-
-async function comment(studyDuration) {
-  const prompt = `ユーザーが勉強を終了しました。勉強時間は ${studyDuration} 分です。この勉強時間に基づいて、励ましや感謝のメッセージを日本語で生成してください。猫のような話し方をしてください。`;
-
-  try {
-    const response = await openai.createCompletion({
-      model: "text-davinci-003", // 使用するモデル
-      prompt: prompt,
-      max_tokens: 100, // メッセージの最大長
-      temperature: 0.7, // 生成のランダム性
-    });
-
-    return response.data.choices[0].text.trim();
-  } catch (error) {
-    console.error("OpenAI API エラー:", error);
-    return "メッセージの生成に失敗しました。お疲れ様！";
+// コメントを返す関数;
+function comment(studyDuration) {
+  let comment = "";
+  switch (true) {
+    case studyDuration >= 240:
+      comment = "すごすぎるって...";
+      break;
+    case studyDuration >= 120:
+      comment = "集中力の鬼！";
+      break;
+    case studyDuration >= 60:
+      comment = "頑張ってるな！ゆっくり休んで！";
+      break;
+    case studyDuration >= 30:
+      comment = "頑張ってるから、ねこちからおやつをあげよう";
+      break;
+    case studyDuration >= 20:
+      comment = "小学校の昼休みの時間を丸々勉強したんか！すごい！";
+      break;
+    case studyDuration >= 10:
+      comment = "今日も積み上げナイス！成長してる！";
+      break;
+    case studyDuration >= 3:
+      comment =
+        "これを毎日積み重ねられるかどうかが大事やねん、ナイス！お疲れ！";
+      break;
+    default:
+      comment = "お疲れ様！";
   }
+  return comment;
 }
