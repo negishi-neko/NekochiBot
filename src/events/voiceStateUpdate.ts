@@ -1,5 +1,5 @@
 // src/events/voiceStateUpdate.ts
-import { VoiceState, Client, TextChannel } from "discord.js";
+import { VoiceState, Client, TextChannel, EmbedBuilder } from "discord.js";
 import { TARGET_VOICE_CHANNEL_ID, NOTIFICATION_CHANNEL_ID } from "../config";
 import { formatDuration } from "../utils";
 
@@ -39,7 +39,17 @@ export default (client: Client) => {
         newState.channelId === TARGET_VOICE_CHANNEL_ID
       ) {
         userEntryTimes[member.id] = new Date(); // 入室時刻を保存
-        notificationChannelText.send(`${member.displayName} が入室しました。`);
+        const embed = new EmbedBuilder()
+          .setColor(0x00ff00)
+          .setAuthor({
+            name: member.displayName,
+            iconURL: member.displayAvatarURL(),
+          })
+          .setDescription(`${member.displayName} が勉強開始しました📚`)
+          .setTimestamp();
+        notificationChannelText.send({
+          embeds: [embed],
+        });
       }
 
       // 退室
@@ -51,9 +61,17 @@ export default (client: Client) => {
 
         if (!entryTime) {
           // 入室記録がない場合 (Bot起動中に既に入室していたなど)
-          notificationChannelText.send(
-            `${member.displayName} が退室しました。（入室時刻の記録なし）`
-          );
+          const embed = new EmbedBuilder()
+            .setColor(0xffa500) // オレンジ色
+            .setAuthor({
+              name: member.displayName,
+              iconURL: member.displayAvatarURL(),
+            })
+            .setDescription(
+              `${member.displayName} が退室しました（入室時刻の記録なし）`
+            )
+            .setTimestamp();
+          notificationChannelText.send({ embeds: [embed] });
           return;
         }
 
@@ -62,9 +80,17 @@ export default (client: Client) => {
         delete userEntryTimes[member.id]; // 退室したので記録を削除
 
         const formattedDuration = formatDuration(duration); // formatDuration 関数を呼び出す
-        notificationChannelText.send(
-          `${member.displayName} が退室しました。\n滞在時間: ${formattedDuration}`
-        );
+        const embed = new EmbedBuilder()
+          .setColor(0xff0000) // 赤色
+          .setAuthor({
+            name: member.displayName,
+            iconURL: member.displayAvatarURL(),
+          })
+          .setDescription(
+            `${member.displayName} が勉強終了しました🍵 \n ${member.displayName} が成長した時間 : ${formattedDuration}`
+          )
+          .setTimestamp();
+        notificationChannelText.send({ embeds: [embed] });
       }
 
       // 移動 (同じチャンネルIDの場合は無視)
