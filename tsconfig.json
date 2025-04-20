@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Node.jsのバージョンに合わせて変更 (例: Node.js 16ならES2020)
+    "module": "NodeNext", // Node.jsで一般的なモジュールシステム
+    "rootDir": "./src", // ソースコードのルートディレクトリ
+    "outDir": "./dist", // コンパイル後のJavaScriptファイルの出力先
+    "strict": true, // より厳格な型チェックを有効にする
+    "esModuleInterop": true, // CommonJSモジュールとES Modulesの相互運用性を有効にする
+    "skipLibCheck": true, // 型定義ファイルの型チェックをスキップする (パフォーマンス向上)
+    "forceConsistentCasingInFileNames": true, // ファイル名の大文字・小文字を区別する
+    "resolveJsonModule": true, // JSONファイルのインポートを許可する
+    "moduleResolution": "NodeNext"
+  },
+  "include": [
+    "./src/**/*.ts", // TypeScriptファイルの格納ディレクトリを指定
+    "types/**/*.d.ts" // 型定義ファイルの格納ディレクトリを指定
+  ],
+  "exclude": [
+    "node_modules" // 除外するディレクトリ
+  ]
+}
