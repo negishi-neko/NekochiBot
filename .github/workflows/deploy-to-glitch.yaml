@@ -27,4 +27,3 @@ jobs:
         with:
           project-id: "${{ secrets.PROJECT_ID }}"
           auth-token: "${{ secrets.AUTH_TOKEN }}"
-          path: dist # ビルド後の出力ディレクトリを指定
