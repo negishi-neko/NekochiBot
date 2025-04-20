@@ -3,8 +3,9 @@ FROM node:23-alpine
 # 作業ディレクトリを作成して移動
 WORKDIR /app
 
-# package.json と package-lock.json をコピー
+# package.json と package-lock.json と tsconfig.json をコピー
 COPY package*.json ./
+COPY tsconfig.json ./
 
 # 依存関係をインストール
 RUN npm install
