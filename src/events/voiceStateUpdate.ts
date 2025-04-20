@@ -1,6 +1,10 @@
 // src/events/voiceStateUpdate.ts
 import { VoiceState, Client, TextChannel } from "discord.js";
 import { TARGET_VOICE_CHANNEL_ID, NOTIFICATION_CHANNEL_ID } from "../config";
+import { formatDuration } from "../utils";
+
+// ユーザーごとの入室時刻を保存するオブジェクト
+const userEntryTimes: { [userId: string]: Date } = {};
 
 export default (client: Client) => {
   client.on(
@@ -34,6 +38,7 @@ export default (client: Client) => {
         !oldState.channelId &&
         newState.channelId === TARGET_VOICE_CHANNEL_ID
       ) {
+        userEntryTimes[member.id] = new Date(); // 入室時刻を保存
         notificationChannelText.send(`${member.displayName} が入室しました。`);
       }
 
@@ -42,7 +47,24 @@ export default (client: Client) => {
         oldState.channelId === TARGET_VOICE_CHANNEL_ID &&
         !newState.channelId
       ) {
-        notificationChannelText.send(`${member.displayName} が退室しました。`);
+        const entryTime = userEntryTimes[member.id];
+
+        if (!entryTime) {
+          // 入室記録がない場合 (Bot起動中に既に入室していたなど)
+          notificationChannelText.send(
+            `${member.displayName} が退室しました。（入室時刻の記録なし）`
+          );
+          return;
+        }
+
+        const exitTime = new Date();
+        const duration = exitTime.getTime() - entryTime.getTime(); // 滞在時間 (ミリ秒)
+        delete userEntryTimes[member.id]; // 退室したので記録を削除
+
+        const formattedDuration = formatDuration(duration); // formatDuration 関数を呼び出す
+        notificationChannelText.send(
+          `${member.displayName} が退室しました。\n滞在時間: ${formattedDuration}`
+        );
       }
 
       // 移動 (同じチャンネルIDの場合は無視)
