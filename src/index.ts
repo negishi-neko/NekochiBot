@@ -1,6 +1,7 @@
 import { GatewayIntentBits, Client } from "discord.js";
 import dotenv from "dotenv";
 import voiceStateUpdateEvent from "./events/voiceStateUpdate";
+import { startServer } from "./server";
 
 const client = new Client({
   intents: [
@@ -15,6 +16,9 @@ async function initialize() {
   try {
     // 環境変数の読み込み
     dotenv.config();
+
+    // Koyeb ヘルスチェック用サーバーを起動
+    startServer();
 
     // Bot の準備完了イベント
     client.on("ready", () => {
